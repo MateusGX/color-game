@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Color Game</title>
+    </head>
+    <body id="body">
+        <h1>NOME É IGUAL A COR?</h1>
+        <progress id="time" value="3" max="3"></progress>
+        <h3 id="pontos">0000</h2>
+        <h2 id="corText">COR</h2>
+        <script>
+
+            var cNomes = ["vermelho","amarelo","azul","laranja","verde","roxo"]
+            var cCor = ["#FF0000", "#FFFF00","#0000FF","#FFA500","#008000","#A020F0"]
+            var cIndex = [0,0]
+            var pontos = 0;
+            var start = 0;
+            var start15 = 0;
+            var perdeu = false
+
+            var time = 3;
+            var contador = setInterval(() =>{
+                if(start15 == 0 && pontos == 15){
+                    document.getElementById('time').max = 1;
+                    if(time > 2){
+                        time = 2
+                    }
+                    start15 = 1
+                }
+                if(time > 0){
+                    time -= 1
+                }else{
+                    perder()
+                }
+                document.getElementById('time').value = time
+            },1000)
+
+            document.addEventListener('keydown', (event) => {
+                if(!perdeu){
+                    if(event.key == 'a'){
+                        //console.log("A")
+                        cor(true)
+                    }else if(event.key == 'd'){
+                        //console.log("D")
+                        cor(false)
+                    }
+                }
+            })
+            function cor(value){
+                if(start == 1){
+                    if(cIndex[0] == cIndex[1]){
+                        if(value){
+                            if(time < document.getElementById('time').max){
+                                time += 1
+                                document.getElementById('time').value = time
+                            }
+                            pontos++
+                            document.getElementById('pontos').innerHTML = pontos
+                        }else{
+                            perder()
+                        }
+                    }else{
+                        if(value){
+                            perder()
+                        }else{
+                            if(time < document.getElementById('time').max){
+                                time += 1
+                                document.getElementById('time').value = time
+                            }
+                            pontos++
+                            document.getElementById('pontos').innerHTML = pontos
+                        }
+                    }
+                }else{
+                    start = 1
+                }
+                cIndex[0] = Math.floor(Math.random() * cNomes.length)
+                cIndex[1] = Math.floor(Math.random() * cCor.length)
+                console.log(cNomes[cIndex[0]] + " " + cNomes[cIndex[1]])
+                if(!perdeu){
+                    document.getElementById('corText').innerHTML = cNomes[cIndex[0]].toLocaleUpperCase()
+                    document.getElementById('corText').style.color = cCor[cIndex[1]]
+                    document.getElementById('body').style.background = `#${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}`
+                }
+            }
+            function perder(){
+                document.getElementById('body').style.background = "red"
+                document.getElementById('pontos').innerHTML = "PERDEU! (" + pontos + ")"
+                perdeu = true
+                time = 0
+            }
+            cor()
+        </script>
+    </body>
+</html>
